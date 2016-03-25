@@ -5,10 +5,13 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.cisc181.exceptions.PersonExceptions;
+
 /*
  * comment
  */
-public abstract class Person implements java.io.Serializable {
+@SuppressWarnings("serial")
+public abstract class Person implements java.io.Serializable{
 
 	private Date DOB;
 	private String FirstName;
@@ -17,6 +20,8 @@ public abstract class Person implements java.io.Serializable {
 	private String address;
 	private String phone_number;
 	private String email_address;
+	@SuppressWarnings("unused")
+	private Date ref_date;
 
 	public String getFirstName() {
 		return FirstName;
@@ -46,10 +51,13 @@ public abstract class Person implements java.io.Serializable {
 		return DOB;
 	}
 
-	public void setDOB(Date DOB){
+	@SuppressWarnings("deprecation")
+	public void setDOB(Date DOB)throws PersonExceptions{
 		this.DOB = DOB;
-		
-		
+		Date ref_date = new Date();
+		if (DOB.getYear() <= ref_date.getYear()-100){
+			throw new PersonExceptions(DOB);
+		}
 	}
 
 	public void setAddress(String newAddress) {
@@ -60,9 +68,12 @@ public abstract class Person implements java.io.Serializable {
 		return address;
 	}
 
-	public void setPhone(String newPhone_number) {
-		phone_number = newPhone_number;
-	
+	public void setPhone(String newPhoneNumber) throws PersonExceptions {
+		String regex = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$";
+		if (!newPhoneNumber.matches(regex)){
+			throw new PersonExceptions(newPhoneNumber);
+		}
+		phone_number = newPhoneNumber;
 	}
 
 	public String getPhone() {
@@ -89,7 +100,7 @@ public abstract class Person implements java.io.Serializable {
 	 */
 
 	public Person(String FirstName, String MiddleName, String LastName,
-			Date DOB, String Address, String Phone_number, String Email)
+			Date DOB, String Address, String Phone_number, String Email) throws PersonExceptions
 	{
 		this.FirstName = FirstName;
 		this.MiddleName = MiddleName;
