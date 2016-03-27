@@ -9,6 +9,7 @@ public class Enrollment {
 	private UUID enrolmentID;
 	private double grade;
 
+	@SuppressWarnings("unused")
 	private Enrollment(){
 		
 	}
